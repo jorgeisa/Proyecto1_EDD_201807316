@@ -4,4 +4,14 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        arbolbb.cpp \
+        libreria.cpp \
+        main.cpp \
+        nodobinario.cpp \
+        proyectopcad.cpp
+
+HEADERS += \
+    arbolbb.h \
+    libreria.h \
+    nodobinario.h \
+    proyectopcad.h

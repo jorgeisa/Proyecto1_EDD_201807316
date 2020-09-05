@@ -1,6 +1,9 @@
 #include <iostream>
 #include <conio.h>
 #include <stdlib.h>
+#include <arbolbb.h>
+#include <nodobinario.h>
+#include <libreria.h>
 
 using namespace std;
 
@@ -11,8 +14,16 @@ void menu();
 
 int main()
 {
-    mostrarInformacion();
-    menu();
+
+//    ArbolBB* arbol = new ArbolBB();
+//    //Libreria* l1 = new Libreria(1, "l1", "l", "color");
+//    nodoBBLibreria *Libreria1 = new nodoBBLibreria(Libreria(1,"l1","l","color"));
+//    arbol->insertarNodo(Libreria1);
+//    nodoBinario* nodoBuscado = arbol->buscarNodo(1);
+//    string id = ((nodoBBLibreria*)nodoBuscado)->getLibreria().getColor();
+//    cout<<id<<endl;
+    //mostrarInformacion();
+    //menu();
     getch();
     return 0;
 }
