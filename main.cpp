@@ -24,6 +24,11 @@ int main()
 //    cout<<id<<endl;
     //mostrarInformacion();
     //menu();
+//    string nombre1 = "Marvin222";
+//    string nombre2 = "Marvin22";
+//    if(nombre1.compare(nombre2)<0){
+//        cout<<"Nombre 1"<<endl;
+//    }
     getch();
     return 0;
 }

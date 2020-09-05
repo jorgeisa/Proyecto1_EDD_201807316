@@ -2,6 +2,7 @@
 #define NODOBINARIO_H
 #include <iostream>
 #include "libreria.h"
+#include "objeto.h"
 
 using namespace std;
 
@@ -27,8 +28,6 @@ private:
 };
 
 
-
-
 //Uso de herencia para guardar los nodos
 class nodoBBLibreria : public nodoBinario
 {
@@ -40,6 +39,14 @@ public:
     void setLibreria(Libreria libreria);
 private:
     Libreria libreria;
+};
+
+class nodoBBObjeto : public nodoBinario
+{
+public:
+    nodoBBObjeto(Objeto objeto);
+    Objeto getObjeto();
+    void setObjeto(Objeto objeto);
 };
 
 #endif // NODOBINARIO_H

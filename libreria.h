@@ -26,7 +26,7 @@ private:
     string nombre;
     string letra;
     string color;
-    //lista puntos
+    //Puntos de libreria iniciales
 };
 
 #endif // LIBRERIA_H
