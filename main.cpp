@@ -4,6 +4,7 @@
 #include <arbolbb.h>
 #include <nodobinario.h>
 #include <libreria.h>
+#include <matrizdispersa.h>
 
 using namespace std;
 
@@ -14,6 +15,19 @@ void menu();
 
 int main()
 {
+    MatrizDispersa* m = new MatrizDispersa();
+    Libreria* l1 = new Libreria(1, "E1", "S", "C");
+    Objeto* o1 = new Objeto(1, l1);
+    Objeto* o2 = new Objeto(2, l1);
+
+    NodoObjeto* nodoM1 = new NodoObjeto(o1, 1, 4);
+    NodoObjeto* nodoM2 = new NodoObjeto(o2, 3, 3);
+    m->agregar(nodoM1);
+    m->agregar(nodoM2);
+    cout<<"\n\n";
+    m->codigo();
+    delete m;
+
 
 //    ArbolBB* arbol = new ArbolBB();
 //    //Libreria* l1 = new Libreria(1, "l1", "l", "color");

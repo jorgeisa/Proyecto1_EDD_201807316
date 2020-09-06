@@ -12,7 +12,8 @@ public:
     ~MatrizDispersa();
 
     void agregar(NodoObjeto* objeto);
-    void codigo();
+    void generar();
+    string codigo();
 private:
     NodoCabecera* horizontal;
     NodoCabecera* vertical;
@@ -23,6 +24,7 @@ private:
 
     NodoMatriz* obtenerUltimoV(NodoCabecera* cabecera, int id);
     NodoMatriz* obtenerUltimoH(NodoCabecera* cabecera, int id);
+    string generar(NodoMatriz* aux);
 };
 
 #endif // MATRIZDISPERSA_H

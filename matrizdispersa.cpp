@@ -7,6 +7,36 @@ MatrizDispersa::MatrizDispersa()
     this->vertical=NULL;
 }
 
+void MatrizDispersa::codigo(){
+    NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
+    aux = this->vertical;
+    temp = this->horizontal;
+
+    //aux y temp son cabezas V y H
+    while(aux!=NULL){
+        extra=aux->getAbajo(); //Extra es un NodoCabecera
+        cout<<((NodoCabecera*)aux)->getId()<<" - ";
+        aux2=aux->getDerecha(); //aux2 es un NodoObjeto
+
+        while(aux2!=NULL){
+            extra2 = aux2->getDerecha(); //Extra 2 es NodoObjeto
+            cout<<((NodoObjeto*)aux2)->getObjeto()->getId()<<" ("<<((NodoObjeto*)aux2)->getPosicionX()<<" , "<<((NodoObjeto*)aux2)->getPosicionY()<<" ) ";
+            aux2=extra2; //NodosObjetos
+        }
+        cout<<"\n";
+        aux = extra; //aux es Cabecera
+    }
+
+    while(temp!=NULL){ //Temp es cabecera
+        temp2=temp->getDerecha(); //Temp es cabecera H
+        cout<<((NodoCabecera*)temp)->getId()<<" ";
+        temp = temp2;
+    }
+}
+
+
+
+//Borrar matriz dispersa
 MatrizDispersa::~MatrizDispersa(){
     NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
     aux = this->vertical;  //aux=inicio vertical
@@ -31,19 +61,20 @@ MatrizDispersa::~MatrizDispersa(){
     }
 }
 
+//Agregar nuevo nodo con posiciones X y Y YA LISTAS
 void MatrizDispersa::agregar(NodoObjeto *objeto){
-    NodoCabecera* vertical = this->getVertical(objeto->getObjeto()->getId());
-    NodoCabecera* horizontal = this->getHorizontal(objeto->getObjeto()->getId());
+    NodoCabecera* vertical = this->getVertical(objeto->getPosicionY());
+    NodoCabecera* horizontal = this->getHorizontal(objeto->getPosicionX());
 
     if(vertical == NULL){
-        vertical=crearVertical(objeto->getObjeto()->getId());
+        vertical=crearVertical(objeto->getPosicionY());
     }
     if(horizontal==NULL){
-        horizontal = crearHorizontal(objeto->getObjeto()->getId());
+        horizontal = crearHorizontal(objeto->getPosicionX());
     }
 
-    NodoMatriz* izquierda = obtenerUltimoH(vertical,objeto->getObjeto()->getId());
-    NodoMatriz* superior = obtenerUltimoV(horizontal, objeto->getObjeto()->getId());
+    NodoMatriz* izquierda = obtenerUltimoH(vertical,objeto->getPosicionX());
+    NodoMatriz* superior = obtenerUltimoV(horizontal, objeto->getPosicionY());
 
     if(izquierda->getDerecha()==NULL){
         izquierda->setDerecha(objeto);
@@ -68,7 +99,8 @@ void MatrizDispersa::agregar(NodoObjeto *objeto){
 
 }
 
-NodoCabecera* MatrizDispersa::crearHorizontal(int id){
+//Nos crea una cabecera
+NodoCabecera* MatrizDispersa::crearHorizontal(int id){ //Le pasaremos el id (posicion) cabecera
     if(this->horizontal==NULL){
         NodoCabecera* nueva = new NodoCabecera(id);
         this->horizontal=nueva;
@@ -87,7 +119,7 @@ NodoCabecera* MatrizDispersa::crearHorizontal(int id){
     //Si el id ingresado es mayor
     while(aux->getDerecha()!=NULL){
         //Si el id esta entre dos nodos [Mayor a < idIngresado < Menor a]
-        if(id > aux->getId() && id < (((NodoCabecera*)aux->getDerecha()))->getId()){
+        if(id > aux->getId() && id < ((NodoCabecera*)aux)->getId()){
             NodoCabecera* nueva = new NodoCabecera(id);
             NodoCabecera* temp=(NodoCabecera*)aux->getDerecha(); //temp= derecha del actual
             temp->setIzquierda(nueva); //izquierda de la derecha del actual es la nueva
@@ -105,7 +137,7 @@ NodoCabecera* MatrizDispersa::crearHorizontal(int id){
     return nuevo;
 }
 
-NodoCabecera* MatrizDispersa::crearVertical(int id){
+NodoCabecera* MatrizDispersa::crearVertical(int id){ //Ingresamos la posicion en Y que no existe
     if(this->vertical==NULL){
         NodoCabecera* nueva = new NodoCabecera(id);
         this->vertical=nueva;
@@ -142,36 +174,45 @@ NodoCabecera* MatrizDispersa::crearVertical(int id){
     return nuevo;
 }
 
-NodoMatriz* MatrizDispersa::obtenerUltimoH(NodoCabecera *cabecera, int id){
-    if (cabecera->getDerecha()==NULL){return cabecera;}
-    NodoMatriz* aux=cabecera->getDerecha();
-    if(id<=((NodoObjeto*)aux)->getPosicionX()){return cabecera;}
+//Obtener el ultimo nodo Horizontal. En donde se insertara el objeto (Posicion X)
+NodoMatriz* MatrizDispersa::obtenerUltimoH(NodoCabecera *cabecera, int id){ //Cabecera vertical y posicion X
+    if (cabecera->getDerecha()==NULL){return cabecera;} //Si a la derecha no hay ningun nodo
 
-    while(aux->getDerecha()!=NULL){
-        if(id <= ((NodoObjeto*)aux)->getObjeto()->getId()){
+    NodoMatriz* aux=cabecera->getDerecha();
+    //Si hay un nodo crearemos un auxiliar para guardar la derecha
+    //Este nodo sera de tipo NodoObjeto
+
+    if(id<=((NodoObjeto*)aux)->getPosicionX()){return cabecera;} //Si la posicion es menor a la que ya hay
+
+    while(aux->getDerecha()!=NULL){ //Recorrer hacia la derecha
+        if(id > ((NodoObjeto*)aux)->getPosicionX() && id <=((NodoObjeto*)aux->getDerecha())->getPosicionX()){
             return aux;
         }
         aux = aux->getDerecha();
     }
 
-    if(id <= ((NodoObjeto*)aux)->getObjeto()->getId()){
+    //Evaluar la ultima posicion
+    if(id <= ((NodoObjeto*)aux)->getPosicionX()){
         return aux->getIzquierda();
     }
     return aux;
 }
 
-NodoMatriz* MatrizDispersa::obtenerUltimoV(NodoCabecera *cabecera, int id){
-    if (cabecera->getAbajo()==NULL){return cabecera;}
-    NodoMatriz* aux=cabecera->getAbajo();
+//Obtener el ultimo nodo vertical para añadir el nodo en la posicion Y
+NodoMatriz* MatrizDispersa::obtenerUltimoV(NodoCabecera *cabecera, int id){ //Cabecera Horizontal, posicion vertical
+    if (cabecera->getAbajo()==NULL){return cabecera;} //Si no hay nodo aun en la cabecera
+    NodoMatriz* aux=cabecera->getAbajo(); //Si hay al menos un nodo creamos un auxiliar que guarde abajo
+    if (id<=((NodoObjeto*)aux)->getPosicionY()){return cabecera;} //Si la posicion en y sigue siendo menor a la que ya esta
 
-    while(aux->getAbajo()!=NULL){
-        if(id <= ((NodoObjeto*)aux)->getObjeto()->getId()){
+    while(aux->getAbajo()!=NULL){//Si encuentra uno en medio
+        if(id > ((NodoObjeto*)aux)->getPosicionY() && id <= ((NodoObjeto*)aux->getAbajo())->getPosicionY()){
             return aux;
         }
         aux = aux->getAbajo();
     }
 
-    if(id > ((NodoObjeto*)aux)->getObjeto()->getId()){
+    //Si encuentra que el final es mayor a la posicion Y a ingresar
+    if(id <= ((NodoObjeto*)aux)->getPosicionY()){
         return aux->getArriba();
     }
     return aux;
@@ -201,4 +242,6 @@ NodoCabecera* MatrizDispersa::getHorizontal(int id){
     }
     return aux;
 }
+
+
 

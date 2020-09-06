@@ -41,7 +41,7 @@ private:
 class NodoObjeto : public NodoMatriz
 {
 public:
-    NodoObjeto(Objeto* objeto);
+    NodoObjeto(Objeto* objeto, int posicionX, int posicionY);
     Objeto* getObjeto();
     int getPosicionX();
     int getPosicionY();
