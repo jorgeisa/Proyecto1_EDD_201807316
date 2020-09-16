@@ -28,7 +28,9 @@ private:
 };
 
 
-//Uso de herencia para guardar los nodos
+//******************  HERENCIA  ******************
+
+//CLASE NODO PARA GUARDAR UNA LIBRERIA
 class nodoBBLibreria : public nodoBinario
 {
 public:
@@ -41,12 +43,15 @@ private:
     Libreria libreria;
 };
 
+//CLASE NODO PARA GUARDAR UN OBJETO
 class nodoBBObjeto : public nodoBinario
 {
 public:
     nodoBBObjeto(Objeto objeto);
     Objeto getObjeto();
     void setObjeto(Objeto objeto);
+private:
+    Objeto objeto;
 };
 
 #endif // NODOBINARIO_H

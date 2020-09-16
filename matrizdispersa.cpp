@@ -20,7 +20,7 @@ void MatrizDispersa::codigo(){
 
         while(aux2!=NULL){
             extra2 = aux2->getDerecha(); //Extra 2 es NodoObjeto
-            cout<<((NodoObjeto*)aux2)->getObjeto()->getId()<<" ("<<((NodoObjeto*)aux2)->getPosicionX()<<" , "<<((NodoObjeto*)aux2)->getPosicionY()<<" ) ";
+            cout<<((NodoObjeto*)aux2)->getIdObjeto()<<" ("<<((NodoObjeto*)aux2)->getPosicionX()<<" , "<<((NodoObjeto*)aux2)->getPosicionY()<<" ) ";
             aux2=extra2; //NodosObjetos
         }
         cout<<"\n";

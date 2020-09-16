@@ -1,5 +1,6 @@
 #include "nodomatriz.h"
 
+//***************  NODO PADRE nodoBinario ***************
 NodoMatriz::NodoMatriz()
 {
     this->derecha=NULL;
@@ -22,7 +23,7 @@ void NodoMatriz::setArriba(NodoMatriz *arriba){this->arriba=arriba;}
 void NodoMatriz::setAbajo(NodoMatriz *abajo){this->abajo=abajo;}
 
 
-//Clase NodoCabecera
+//*************** HERENCIA nodoCabecera ***************
 NodoCabecera::NodoCabecera(int id){
     this->id=id;
 }
@@ -31,15 +32,23 @@ void NodoCabecera::setId(int id){this->id=id;}
 int NodoCabecera::getId(){return this->id;}
 
 
-//Clase NodoObjeto
-NodoObjeto :: NodoObjeto(Objeto* objeto, int posicionX, int posicionY){
-    this->objeto=objeto;
+//*************** HERENCIA nodoObjeto ***************
+NodoObjeto :: NodoObjeto(int idObjeto, string color, string letra, int posicionX, int posicionY){
+    this->idObjeto = idObjeto;
+    this->color = color;
+    this->letra = letra;
     this->posicionX=posicionX;
     this->posicionY=posicionY;
 }
 
-Objeto* NodoObjeto::getObjeto(){return this->objeto;}
-void NodoObjeto::setObjeto(Objeto* objeto){this->objeto=objeto;}
+int NodoObjeto::getIdObjeto(){return this->idObjeto;}
+void NodoObjeto::setIdObjeto(int idObjeto){this->idObjeto=idObjeto;}
+
+string NodoObjeto::getColor(){return this->color;}
+void NodoObjeto::setColor(string color){this->color=color;}
+
+string NodoObjeto::getLetra(){return this->letra;}
+void NodoObjeto::setLetra(string letra){this->letra=letra;}
 
 int NodoObjeto::getPosicionX(){return this->posicionX;}
 int NodoObjeto::getPosicionY(){return this->posicionY;}

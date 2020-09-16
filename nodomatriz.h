@@ -26,7 +26,10 @@ private:
     NodoMatriz* abajo;
 };
 
-//Clase cabecera usando herencia
+
+//********************* HERENCIA *********************
+
+//CLASE NODO CABECERA
 class NodoCabecera : public NodoMatriz
 {
 public:
@@ -37,20 +40,26 @@ private:
     int id;
 };
 
-//Clase NodoObjeto usando herencia
+//CLASE NODO OBJETO
 class NodoObjeto : public NodoMatriz
 {
 public:
-    NodoObjeto(Objeto* objeto, int posicionX, int posicionY);
-    Objeto* getObjeto();
+    NodoObjeto(int idObjeto, string color, string letra, int posicionX, int posicionY);
+    int getIdObjeto();
+    string getColor();
+    string getLetra();
     int getPosicionX();
     int getPosicionY();
 
-    void setObjeto(Objeto* objeto);
+    void setIdObjeto(int idObjeto);
+    void setColor(string color);
+    void setLetra(string letra);
     void setPosicionX(int posicionX);
     void setPosicionY(int posicionY);
 private:
-    Objeto* objeto;
+    int idObjeto;
+    string color;
+    string letra;
     int posicionX;
     int posicionY;
 };

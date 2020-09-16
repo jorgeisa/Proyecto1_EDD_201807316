@@ -13,7 +13,7 @@ public:
 
     void agregar(NodoObjeto* objeto);
     void generar();
-    string codigo();
+    void codigo();
 private:
     NodoCabecera* horizontal;
     NodoCabecera* vertical;

@@ -20,3 +20,13 @@ int ProyectoPCAD::getValorAscii(){
     return codigo;
 }
 
+string ProyectoPCAD::getNombreP(){return this->nombreP;}
+
+int ProyectoPCAD::getnombreAscii(){return this->nombreAscii;}
+
+void ProyectoPCAD::setNombreP(string nombreP){this->nombreP=nombreP;}
+
+void ProyectoPCAD::setNombreAscii(int nombreAscii){this->nombreAscii=nombreAscii;}
+
+
+

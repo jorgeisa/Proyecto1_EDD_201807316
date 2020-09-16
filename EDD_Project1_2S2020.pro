@@ -6,9 +6,12 @@ CONFIG -= qt
 SOURCES += \
         arbolbb.cpp \
         libreria.cpp \
+        listadobleenlazada.cpp \
         main.cpp \
         matrizdispersa.cpp \
+        nivelproyecto.cpp \
         nodobinario.cpp \
+        nododobleenlazada.cpp \
         nodomatriz.cpp \
         objeto.cpp \
         proyectopcad.cpp
@@ -16,8 +19,11 @@ SOURCES += \
 HEADERS += \
     arbolbb.h \
     libreria.h \
+    listadobleenlazada.h \
     matrizdispersa.h \
+    nivelproyecto.h \
     nodobinario.h \
+    nododobleenlazada.h \
     nodomatriz.h \
     objeto.h \
     proyectopcad.h

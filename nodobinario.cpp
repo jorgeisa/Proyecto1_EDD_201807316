@@ -1,6 +1,6 @@
 #include "nodobinario.h"
 
-//Nodo Padre
+//***************  NODO PADRE nodoBinario ***************
 nodoBinario::nodoBinario(int identificador)
 {
     this->identificador=identificador;
@@ -9,7 +9,7 @@ nodoBinario::nodoBinario(int identificador)
 }
 
 nodoBinario::~nodoBinario(){
-    cout<<"Nodoo Eliminado"<<endl;
+    cout<<"Nodo Eliminado"<<endl;
 }
 
 nodoBinario* nodoBinario::getDerecha(){return this->derecha;}
@@ -19,7 +19,7 @@ void nodoBinario::setDerecha(nodoBinario *derecha){this->derecha = derecha;}
 void nodoBinario::setIzquierda(nodoBinario *izquierda){this->izquierda = izquierda;}
 void nodoBinario::setIdentificador(int identificador){this->identificador=identificador;}
 
-//Nodo con Herencia
+//*************** HERENCIA nodoBBLibreria ***************
 nodoBBLibreria::nodoBBLibreria(Libreria libreria) : nodoBinario(libreria.getIdentificador()){
     this->libreria = libreria;
 }
@@ -28,5 +28,19 @@ nodoBBLibreria::nodoBBLibreria(Libreria libreria) : nodoBinario(libreria.getIden
 Libreria nodoBBLibreria::getLibreria(){return this->libreria;}
 //sets
 void nodoBBLibreria::setLibreria(Libreria libreria){this->libreria = libreria;}
+
+
+//*************** HERENCIA nodoBBObjeto ***************
+nodoBBObjeto::nodoBBObjeto(Objeto objeto) : nodoBinario(objeto.getLibreria()->getIdentificador()){
+    this->objeto = objeto;
+}
+
+Objeto nodoBBObjeto::getObjeto(){
+    return this->objeto;
+}
+
+void nodoBBObjeto::setObjeto(Objeto objeto){
+    this->objeto = objeto;
+}
 
 

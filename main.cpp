@@ -5,6 +5,15 @@
 #include <nodobinario.h>
 #include <libreria.h>
 #include <matrizdispersa.h>
+#include <listadobleenlazada.h>
+#include <nododobleenlazada.h>
+#include <proyectopcad.h>
+#include <nivelproyecto.h>
+
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -15,18 +24,48 @@ void menu();
 
 int main()
 {
-    MatrizDispersa* m = new MatrizDispersa();
-    Libreria* l1 = new Libreria(1, "E1", "S", "C");
-    Objeto* o1 = new Objeto(1, l1);
-    Objeto* o2 = new Objeto(2, l1);
 
-    NodoObjeto* nodoM1 = new NodoObjeto(o1, 1, 4);
-    NodoObjeto* nodoM2 = new NodoObjeto(o2, 3, 3);
-    m->agregar(nodoM1);
-    m->agregar(nodoM2);
-    cout<<"\n\n";
-    m->codigo();
-    delete m;
+    ListaDobleEnlazada* listaD = new ListaDobleEnlazada();
+
+    NivelProyecto* n1p1 = new NivelProyecto(1);
+    NivelProyecto* n2p1 = new NivelProyecto(2);
+    NivelProyecto* n3p1 = new NivelProyecto(3);
+
+    NodoDobleNivel *a, *b, *c;
+    a = new NodoDobleNivel(n1p1);
+    b = new NodoDobleNivel(n2p1);
+    c = new NodoDobleNivel(n3p1);
+
+    listaD->insertarAlFinal(a);
+    listaD->insertarAlFinal(b);
+    listaD->insertarAlFinal(c);
+
+    listaD->imprimir();
+
+    ofstream file("salida.dot");
+    file<<listaD->generar();
+    file.close();
+    system("dot -Tpng salida.dot -o imagen.png");
+
+    delete listaD;
+
+
+
+
+//******************* PRUEBA DISPERSA *******************
+//    MatrizDispersa* m = new MatrizDispersa();
+//    Libreria* l1 = new Libreria(1, "E1", "S", "C");
+//    Objeto* o1 = new Objeto(1, l1);
+//    Objeto* o2 = new Objeto(2, l1);
+
+//    NodoObjeto* nodoM1 = new NodoObjeto(o1->getId(), o1->getLibreria()->getColor(), o1->getLibreria()->getLetra(), 1, 4);
+//    NodoObjeto* nodoM2 = new NodoObjeto(o2->getId(), o2->getLibreria()->getColor(), o2->getLibreria()->getLetra(), 3, 3);
+//    m->agregar(nodoM1);
+//    m->agregar(nodoM2);
+//    cout<<"\n\n";
+//    m->codigo();
+//    delete m;
+//*******************************************************
 
 
 //    ArbolBB* arbol = new ArbolBB();
@@ -43,7 +82,7 @@ int main()
 //    if(nombre1.compare(nombre2)<0){
 //        cout<<"Nombre 1"<<endl;
 //    }
-    getch();
+    //getch();
     return 0;
 }
 
