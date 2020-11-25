@@ -1,7 +1,11 @@
 #ifndef MATRIZDISPERSA_H
 #define MATRIZDISPERSA_H
 #include <nodomatriz.h>
+#include <string>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -13,7 +17,9 @@ public:
 
     void agregar(NodoObjeto* objeto);
     void generar();
-    void codigo();
+    void generar2();
+    void mostrar_Posiciones();
+    void mostrar_Punteros();
 private:
     NodoCabecera* horizontal;
     NodoCabecera* vertical;

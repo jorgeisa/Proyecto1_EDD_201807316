@@ -7,7 +7,7 @@ MatrizDispersa::MatrizDispersa()
     this->vertical=NULL;
 }
 
-void MatrizDispersa::codigo(){
+void MatrizDispersa::mostrar_Posiciones(){
     NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
     aux = this->vertical;
     temp = this->horizontal;
@@ -34,6 +34,39 @@ void MatrizDispersa::codigo(){
     }
 }
 
+void MatrizDispersa::mostrar_Punteros(){
+    NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
+    aux = this->vertical;  //aux=inicio vertical
+    temp = this->horizontal; //temp = inicio horizontal
+
+    while(aux!=NULL){ //Recorremos las cabeceras verticalmente
+        cout<<"\n\n";
+        extra=aux->getAbajo(); //Obtener abajo de cabeza vertical
+        aux2=aux->getDerecha(); //Obtener derecha de cabeza vertical
+
+        cout<<"\nSe recorre verticalmente: "<<((NodoCabecera*)aux)->getId();
+
+        while(aux2!=NULL){//mientras la derecha no sea null
+            extra2=aux2->getDerecha(); //extra2 es la derecha de la derecha
+            cout<<"\nNodo Objeto Recorrido: "<<((NodoObjeto*)aux2)->getIdObjeto();
+            cout<<"\nArriba: "<<((NodoCabecera*)aux2->getArriba())->getId();
+            cout<<"\nIzquierda: "<<((NodoCabecera*)aux2->getIzquierda())->getId();
+            //delete aux2; //eliminamos la primera derecha
+            aux2=extra2; //primera derecha esta donde la segunda derecha
+        }
+        //delete aux; //eliminamos la cabecera vertical
+        aux=extra; //aux ahora es el de abajo
+    }
+
+
+    while(temp!=NULL){ //mientras la cabecera horizontal no sea null
+        cout<<"\n\n";
+        temp2=temp->getDerecha(); //temp2 es la derecha del actual horizontal
+        cout<<"\nSe recorre horizontalmente: "<<((NodoCabecera*)temp)->getId();
+        //delete temp;  //eliminamos el actual horizontal
+        temp=temp2;   //temp se mueve hacia la derecha del eliminado.
+    }
+}
 
 
 //Borrar matriz dispersa
@@ -62,7 +95,7 @@ MatrizDispersa::~MatrizDispersa(){
 }
 
 //Agregar nuevo nodo con posiciones X y Y YA LISTAS
-void MatrizDispersa::agregar(NodoObjeto *objeto){
+void MatrizDispersa::agregar(NodoObjeto* objeto){
     NodoCabecera* vertical = this->getVertical(objeto->getPosicionY());
     NodoCabecera* horizontal = this->getHorizontal(objeto->getPosicionX());
 
@@ -128,6 +161,7 @@ NodoCabecera* MatrizDispersa::crearHorizontal(int id){ //Le pasaremos el id (pos
             nueva->setIzquierda(aux); //izquierda de la nueva es la actual(aux)
             return nueva;
         }
+        aux = ((NodoCabecera*)aux->getDerecha());
     }
 
     //Si llego a null, es mayor a todos los id
@@ -165,6 +199,7 @@ NodoCabecera* MatrizDispersa::crearVertical(int id){ //Ingresamos la posicion en
             nueva->setArriba(aux); //izquierda de la nueva es la actual(aux)
             return nueva;
         }
+       aux = ((NodoCabecera*)aux->getAbajo());
     }
 
     //Si llego a null, es mayor a todos los id
@@ -241,6 +276,331 @@ NodoCabecera* MatrizDispersa::getHorizontal(int id){
         aux = (NodoCabecera*)aux->getDerecha();
     }
     return aux;
+}
+
+void MatrizDispersa::generar(){
+   ostringstream cadena;
+   int contadorNodos = 0;
+   int contadorGrupos = 0;
+
+   cadena<<"digraph G {"<<endl<<"node[shape=\"box\"];"<<endl<<"graph[splines=\"ortho\"];"<<endl;
+
+   cadena<<"nodoo[label=\"Pivote\";group="<<contadorGrupos<<"];"<<endl;
+
+   //Cadena a graficar
+
+   NodoMatriz *auxVertical , *auxHorizontal;
+
+   //Primeras Cabeceras Vertical y Horizontal
+   auxVertical = this->vertical;
+   auxHorizontal = this->horizontal;
+
+   //**Recorro Verticalmente para los grupos, creacion cabeceras**
+
+   //Recorro Verticlamente las cabeceras
+   while(auxVertical!=NULL){
+       cadena<<"node"<<contadorNodos<<"[label=\""<<((NodoCabecera*)auxVertical)->getId()<<"\" , group="<<contadorGrupos<<"];"<<endl;
+       auxVertical = auxVertical->getAbajo();
+       contadorNodos++;
+   }
+
+   //Recorro Horizontalmente las cabeceras
+   while(auxHorizontal!=NULL){
+       cadena<<"node"<<contadorNodos<<"[label=\""<<((NodoCabecera*)auxHorizontal)->getId()<<"\" , groups="<<contadorGrupos<<"];"<<endl;
+       auxHorizontal = auxHorizontal->getDerecha();
+       contadorNodos++;
+       contadorGrupos++;
+   }
+
+   //**Uniones de Cabeceras Verticales y Horizontales entre ellas**
+   auxVertical = this->vertical;
+   auxHorizontal = this->horizontal;
+   int contadorUniones = 0;
+   int auxUniones = 0;
+   //Uniones cabeceras verticales
+   while(auxVertical!=NULL){
+       if(auxVertical->getAbajo()!=NULL){
+           auxUniones++;
+           cadena<<"node"<<contadorUniones<<"->node"<<auxUniones<<";"<<endl;
+           cadena<<"node"<<auxUniones<<"->node"<<contadorUniones<<";"<<endl;
+           contadorUniones++;
+       }
+       auxVertical = auxVertical->getAbajo();
+   }
+
+   //Uniones cabeceras horizontales
+   contadorUniones++; //numeracion del nodo actual
+   auxUniones++; //numeracion del nodo actual
+
+   int auxContadorHorizontal = auxUniones; //Para posteriormente las uniones de Objetos
+
+   while(auxHorizontal!=NULL){
+       if(auxHorizontal->getDerecha()!=NULL){
+           auxUniones++;
+           cadena<<"node"<<contadorUniones<<"->node"<<auxUniones<<";"<<endl;
+           cadena<<"node"<<auxUniones<<"->node"<<contadorUniones<<";"<<endl;
+           contadorUniones++;
+       }
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+   //**Recorro primero horizontal y luego vertical para crear grupos de "Nodos Objetos"**
+   auxVertical = this->vertical;
+   auxHorizontal = this->horizontal;
+   contadorNodos++;
+   contadorGrupos = 1;
+
+   while(auxHorizontal!=NULL){
+       if(auxHorizontal->getAbajo()!=NULL){
+           NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
+           while(auxObjeto!=NULL){
+               string letra = ((NodoObjeto*)auxObjeto)->getLetra();
+               int x = ((NodoObjeto*)auxObjeto)->getPosicionX();
+               int y = ((NodoObjeto*)auxObjeto)->getPosicionY();
+               cadena<<"node"<<contadorNodos<<"[label=\""<<letra<<" , Pos. ("<<x<<" , "<<y<<")\", group="<<contadorGrupos<<"];"<<endl;
+
+               contadorNodos++;
+               auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
+           }
+       }
+       contadorGrupos++;
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+
+   //**Recorro Primero Horizontal y luego Verticalmente para unir "Nodos Objeto" VERTICALMENTE**
+   auxHorizontal = this->horizontal;
+   while(auxHorizontal!=NULL){
+       if(auxHorizontal->getAbajo()!=NULL){
+           contadorUniones++; //numeracion del nodo actual
+           auxUniones++; //numeracion del nodo actual
+           NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
+
+           //Hacemos uso del contador auxiliar horizontal
+           cadena<<"node"<<auxContadorHorizontal<<"->node"<<auxUniones<<";"<<endl;
+           cadena<<"node"<<auxUniones<<"->node"<<auxContadorHorizontal<<";"<<endl;
+
+           while(auxObjeto->getAbajo()!=NULL){
+               auxUniones++;
+               cadena<<"node"<<contadorUniones<<"->node"<<auxUniones<<";"<<endl;
+               cadena<<"node"<<auxUniones<<"->node"<<contadorUniones<<";"<<endl;
+               contadorUniones++;
+               auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
+           }
+
+           auxContadorHorizontal++;
+       }
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+
+   //**Recorro Primero Vertical y luego Horizontalmente para unir "Nodos Objeto" HORIZONTALMENTE**
+//   auxVertical = this->vertical;
+//   auxHorizontal = this->horizontal;
+//   int cabecerasHorizontales = 0;
+//   int cabecerasVerticales = 0;
+//   int sumaCabeceras = 0;
+
+//   while(auxHorizontal!=NULL){
+//       cabecerasHorizontales++;
+//       auxHorizontal = auxHorizontal->getDerecha();
+//   }
+
+//   while(auxVertical!=NULL){
+//       cabecerasVerticales++;
+//       auxVertical = auxVertical->getAbajo();
+//   }
+
+//   //Primer nodo despues de todas las cabeceras
+//   sumaCabeceras = cabecerasHorizontales + cabecerasVerticales;
+//   int cabeceras = sumaCabeceras;
+//   auxVertical = this->vertical;
+//   auxHorizontal = this->horizontal;
+
+//   while(auxVertical!=NULL){
+//       while(((NodoObjeto*)auxVertical->getDerecha() != ((NodoObjeto*)auxHorizontal)->getAbajo())){
+//           NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
+//           while(auxObjeto!=NULL){
+//               cabeceras++;
+//               auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
+//           }
+
+//           auxHorizontal = auxHorizontal->getDerecha();
+//       }
+
+
+//   }
+
+
+   //Termina Cadena a graficar
+   cadena<<"}"<<endl;
+   ofstream file("salida.dot");
+   file<<cadena.str();
+   file.close();
+
+   system("circo -Tpng salida.dot -o imagen.png");
+   cout<<cadena.str()<<endl;
+}
+
+
+void MatrizDispersa::generar2(){
+   ostringstream cadena;
+   int contadorGrupos = 0;
+
+   cadena<<"digraph G {"<<endl<<"node[shape=\"box\"];"<<endl<<"graph[splines=\"ortho\"];"<<endl;
+
+   cadena<<"nodoo[label=\"Pivote\";group="<<contadorGrupos<<"];"<<endl;
+
+   //Cadena a graficar
+
+   NodoMatriz *auxVertical , *auxHorizontal;
+
+   //CREACION Cabeceras Vertical y Horizontal
+   auxVertical = this->vertical;
+   auxHorizontal = this->horizontal;
+
+   //Recorro Verticalmente para CREAR las cabeceras verticales
+   while(auxVertical!=NULL){
+       cadena<<"node"<<&(*auxVertical)<<"[label=\""<<((NodoCabecera*)auxVertical)->getId()<<"\" , group="<<contadorGrupos<<"];"<<endl;
+       auxVertical = auxVertical->getAbajo();
+   }
+
+   contadorGrupos++;
+
+   //Recorro Horizontalmente para CREAR las cabeceras horizontales
+   while(auxHorizontal!=NULL){
+       cadena<<"node"<<&(*auxHorizontal)<<"[label=\""<<((NodoCabecera*)auxHorizontal)->getId()<<"\" , group="<<contadorGrupos<<"];"<<endl;
+       contadorGrupos++;
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+   //**UNIONES de cabeceras verticales y horizontales entre ellas**
+
+   auxVertical = this->vertical;
+   auxHorizontal = this->horizontal;
+
+   //UNION CABECERAS verticales
+   while(auxVertical->getAbajo()!=NULL){
+       NodoMatriz* nodoAbajo = auxVertical->getAbajo();
+       cadena<<"node"<<&(*auxVertical)<<"->node"<<&(*nodoAbajo)<<";"<<endl;
+       cadena<<"node"<<&(*nodoAbajo)<<"->node"<<&(*auxVertical)<<";"<<endl;
+       auxVertical = auxVertical->getAbajo();
+   }
+
+   //UNION CABECERAS horiontales
+   while(auxHorizontal->getDerecha()!=NULL){
+       NodoMatriz* nodoDerecha = auxHorizontal->getDerecha();
+       cadena<<"node"<<&(*auxHorizontal)<<"->node"<<&(*nodoDerecha)<<";"<<endl;
+       cadena<<"node"<<&(*nodoDerecha)<<"->node"<<&(*auxHorizontal)<<";"<<endl;
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+   //**CREAR Nodos Objeto - Recorro primero horizontal y luego vertical para crear grupos de "Nodos Objeto"**
+   auxHorizontal = this->horizontal;
+   auxVertical = this->vertical;
+   contadorGrupos = 1;
+
+   while(auxHorizontal!=NULL){
+
+       NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
+
+       while(auxObjeto!=NULL){
+           string letra = ((NodoObjeto*)auxObjeto)->getLetra();
+           string color = ((NodoObjeto*)auxObjeto)->getColor();
+           int posicionX = ((NodoObjeto*)auxObjeto)->getPosicionX();
+           int posicionY = ((NodoObjeto*)auxObjeto)->getPosicionY();
+           cadena<<"node"<<&(*auxObjeto)<<"[label=\""<<letra<<" , "<<color<<" ("<<posicionX<<" , "<<posicionY<<" )"<<"\" , group="<<contadorGrupos<<"];"<<endl;
+           auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
+       }
+       contadorGrupos++;
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+
+   //**UNIONES VERTICALES NODOS OBJETO - Recorro horizontalmente y luego verticalmente**
+   auxHorizontal = this->horizontal;
+   auxVertical = this->vertical;
+
+   while(auxHorizontal!=NULL){
+
+       NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
+
+       cadena<<"node"<<&(*auxHorizontal)<<"->node"<<&(*auxObjeto)<<";"<<endl;
+       cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxHorizontal)<<";"<<endl;
+
+       while(auxObjeto->getAbajo()!=NULL){
+           cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxObjeto->getAbajo())<<";"<<endl;
+           cadena<<"node"<<&(*auxObjeto->getAbajo())<<"->node"<<&(*auxObjeto)<<";"<<endl;
+           auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
+       }
+
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+   //**UNIONES HORIZONTALES NODOS OBJETO - Recorro Verticalmente y luego Horizontalmente**
+
+   auxHorizontal = this->horizontal;
+   auxVertical = this->vertical;
+
+   while(auxVertical!=NULL){
+
+       NodoObjeto* auxObjeto = ((NodoObjeto*)auxVertical->getDerecha());
+
+       cadena<<"node"<<&(*auxVertical)<<"->node"<<&(*auxObjeto)<<";"<<endl;
+       cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxVertical)<<";"<<endl;
+
+       while(auxObjeto->getDerecha()!=NULL){
+           cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxObjeto->getAbajo())<<";"<<endl;
+           cadena<<"node"<<&(*auxObjeto->getAbajo())<<"->node"<<&(*auxObjeto)<<";"<<endl;
+           auxObjeto = ((NodoObjeto*)auxObjeto->getDerecha());
+       }
+       auxVertical = auxVertical->getAbajo();
+   }
+
+   cadena<<"{rank=\"same\";nodoo;";
+
+   auxHorizontal = this->horizontal;
+   auxVertical = this->vertical;
+
+   while(auxHorizontal!=NULL){
+       cadena<<"node"<<&(*auxHorizontal)<<";";
+       auxHorizontal = auxHorizontal->getDerecha();
+   }
+
+   cadena<<"};"<<endl;
+
+   auxHorizontal = this->horizontal;
+   auxVertical = this->vertical;
+
+   cadena<<"nodoo->node"<<&(*auxHorizontal)<<endl;
+   cadena<<"nodoo->node"<<&(*auxVertical)<<endl;
+
+   while(auxVertical!=NULL){
+       cadena<<"{rank=\"same\";"<<"node"<<auxVertical<<";";
+       NodoObjeto* auxObjeto = ((NodoObjeto*)auxVertical->getDerecha());
+       while(auxObjeto!=NULL){
+           cadena<<"node"<<&(*auxObjeto)<<";";
+           auxObjeto = ((NodoObjeto*)auxObjeto->getDerecha());
+       }
+
+       cadena<<"};"<<endl;
+       auxVertical = auxVertical->getAbajo();
+   }
+
+
+   //Termina Cadena a graficar
+   cadena<<"}"<<endl;
+   ofstream file("salida.dot");
+   file<<cadena.str();
+
+
+//   system("circo -Tpng salida.dot -o imagen.png");
+   system("dot -Tpng salida.dot -o imagen.png");
+//   system("C:\\Users\\Isaac\\Desktop\\imagen.png");
+   system("\"C:\\Users\\Isaac\\Desktop\\2S2020\\Estructuras de Datos\\Laboratorio\\EDD_2S2020 - Proyectos Git\\EDD_Project1_2S2020\\build-EDD_Project1_2S2020-Desktop_Qt_5_15_0_MinGW_64_bit-Debug\\imagen.png\"");
+   file.close();
+   cout<<"\n\n";
+   cout<<cadena.str()<<endl;
 }
 
 

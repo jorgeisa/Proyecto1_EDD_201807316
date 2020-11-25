@@ -25,46 +25,58 @@ void menu();
 int main()
 {
 
-    ListaDobleEnlazada* listaD = new ListaDobleEnlazada();
+//******************* PRUEBA LISTA DOBLE NIVELES *******************
 
-    NivelProyecto* n1p1 = new NivelProyecto(1);
-    NivelProyecto* n2p1 = new NivelProyecto(2);
-    NivelProyecto* n3p1 = new NivelProyecto(3);
+//    ListaDobleEnlazada* listaD = new ListaDobleEnlazada();
 
-    NodoDobleNivel *a, *b, *c;
-    a = new NodoDobleNivel(n1p1);
-    b = new NodoDobleNivel(n2p1);
-    c = new NodoDobleNivel(n3p1);
+//    NivelProyecto* n1p1 = new NivelProyecto(1);
+//    NivelProyecto* n2p1 = new NivelProyecto(2);
+//    NivelProyecto* n3p1 = new NivelProyecto(200);
 
-    listaD->insertarAlFinal(a);
-    listaD->insertarAlFinal(b);
-    listaD->insertarAlFinal(c);
+//    NodoDobleNivel *a, *b, *c;
+//    a = new NodoDobleNivel(n1p1);
+//    b = new NodoDobleNivel(n2p1);
+//    c = new NodoDobleNivel(n3p1);
 
-    listaD->imprimir();
+//    listaD->insertarAlFinal(a);
+//    listaD->insertarAlFinal(b);
+//    listaD->insertarAlFinal(c);
 
-    ofstream file("salida.dot");
-    file<<listaD->generar();
-    file.close();
-    system("dot -Tpng salida.dot -o imagen.png");
+//    listaD->imprimir();
 
-    delete listaD;
+//    ofstream file("salida.dot");
+//    file<<listaD->generar();
+//    file.close();
+//    system("dot -Tpng salida.dot -o imagenPe.png");
 
+//    delete listaD;
 
-
+//*******************************************************
 
 //******************* PRUEBA DISPERSA *******************
-//    MatrizDispersa* m = new MatrizDispersa();
-//    Libreria* l1 = new Libreria(1, "E1", "S", "C");
-//    Objeto* o1 = new Objeto(1, l1);
-//    Objeto* o2 = new Objeto(2, l1);
+    MatrizDispersa* m = new MatrizDispersa();
+    Libreria* l1 = new Libreria(1, "E1", "S", "C");
+    Objeto* o1 = new Objeto(13, l1);
+    Objeto* o2 = new Objeto(25, l1);
+    Objeto* o3 = new Objeto(75, l1);
+    Objeto* o4 = new Objeto(100, l1);
 
-//    NodoObjeto* nodoM1 = new NodoObjeto(o1->getId(), o1->getLibreria()->getColor(), o1->getLibreria()->getLetra(), 1, 4);
-//    NodoObjeto* nodoM2 = new NodoObjeto(o2->getId(), o2->getLibreria()->getColor(), o2->getLibreria()->getLetra(), 3, 3);
-//    m->agregar(nodoM1);
-//    m->agregar(nodoM2);
-//    cout<<"\n\n";
-//    m->codigo();
-//    delete m;
+    NodoObjeto* nodoM1 = new NodoObjeto(o1->getId(), o1->getLibreria()->getColor(), o1->getLibreria()->getLetra(), 1, 4);
+    NodoObjeto* nodoM2 = new NodoObjeto(o2->getId(), o2->getLibreria()->getColor(), o2->getLibreria()->getLetra(), 3, 3);
+    NodoObjeto* nodoM3 = new NodoObjeto(o3->getId(), o3->getLibreria()->getColor(), o3->getLibreria()->getLetra(), 10, 11);
+    NodoObjeto* nodoM4 = new NodoObjeto(o4->getId(), o4->getLibreria()->getColor(), o4->getLibreria()->getLetra(), 2, 51);
+    m->agregar(nodoM1);
+    m->agregar(nodoM2);
+    cout<<"gg\n";
+    m->agregar(nodoM3);
+    m->agregar(nodoM4);
+    cout<<"\n\n";
+    m->mostrar_Posiciones();
+    cout<<"\n\nMostrando Punteros: \n";
+    m->mostrar_Punteros();
+    m->generar2();
+    delete m;
+    cout<<"\n\n";
 //*******************************************************
 
 

@@ -31,7 +31,7 @@ void ListaDobleEnlazada::insertarAlFinal(NodoDobleEnlazada *nuevoNodo){
 string ListaDobleEnlazada::generar(){
     ostringstream cadena;
     cadena<<"digraph G{"<<endl<<"node[shape=\"record\"];"<<endl;
-    cadena<<"rankdir=LR;"<<endl;
+    cadena<<"rankdir=BT;"<<endl; //Se usa para que salga de abajo para arriba
     cadena<<generar(this->cabeza)<<endl;
     cadena<<"}"<<endl;
     return cadena.str();
