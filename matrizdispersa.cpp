@@ -7,68 +7,6 @@ MatrizDispersa::MatrizDispersa()
     this->vertical=NULL;
 }
 
-void MatrizDispersa::mostrar_Posiciones(){
-    NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
-    aux = this->vertical;
-    temp = this->horizontal;
-
-    //aux y temp son cabezas V y H
-    while(aux!=NULL){
-        extra=aux->getAbajo(); //Extra es un NodoCabecera
-        cout<<((NodoCabecera*)aux)->getId()<<" - ";
-        aux2=aux->getDerecha(); //aux2 es un NodoObjeto
-
-        while(aux2!=NULL){
-            extra2 = aux2->getDerecha(); //Extra 2 es NodoObjeto
-            cout<<((NodoObjeto*)aux2)->getIdObjeto()<<" ("<<((NodoObjeto*)aux2)->getPosicionX()<<" , "<<((NodoObjeto*)aux2)->getPosicionY()<<" ) ";
-            aux2=extra2; //NodosObjetos
-        }
-        cout<<"\n";
-        aux = extra; //aux es Cabecera
-    }
-
-    while(temp!=NULL){ //Temp es cabecera
-        temp2=temp->getDerecha(); //Temp es cabecera H
-        cout<<((NodoCabecera*)temp)->getId()<<" ";
-        temp = temp2;
-    }
-}
-
-void MatrizDispersa::mostrar_Punteros(){
-    NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
-    aux = this->vertical;  //aux=inicio vertical
-    temp = this->horizontal; //temp = inicio horizontal
-
-    while(aux!=NULL){ //Recorremos las cabeceras verticalmente
-        cout<<"\n\n";
-        extra=aux->getAbajo(); //Obtener abajo de cabeza vertical
-        aux2=aux->getDerecha(); //Obtener derecha de cabeza vertical
-
-        cout<<"\nSe recorre verticalmente: "<<((NodoCabecera*)aux)->getId();
-
-        while(aux2!=NULL){//mientras la derecha no sea null
-            extra2=aux2->getDerecha(); //extra2 es la derecha de la derecha
-            cout<<"\nNodo Objeto Recorrido: "<<((NodoObjeto*)aux2)->getIdObjeto();
-            cout<<"\nArriba: "<<((NodoCabecera*)aux2->getArriba())->getId();
-            cout<<"\nIzquierda: "<<((NodoCabecera*)aux2->getIzquierda())->getId();
-            //delete aux2; //eliminamos la primera derecha
-            aux2=extra2; //primera derecha esta donde la segunda derecha
-        }
-        //delete aux; //eliminamos la cabecera vertical
-        aux=extra; //aux ahora es el de abajo
-    }
-
-
-    while(temp!=NULL){ //mientras la cabecera horizontal no sea null
-        cout<<"\n\n";
-        temp2=temp->getDerecha(); //temp2 es la derecha del actual horizontal
-        cout<<"\nSe recorre horizontalmente: "<<((NodoCabecera*)temp)->getId();
-        //delete temp;  //eliminamos el actual horizontal
-        temp=temp2;   //temp se mueve hacia la derecha del eliminado.
-    }
-}
-
-
 //Borrar matriz dispersa
 MatrizDispersa::~MatrizDispersa(){
     NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
@@ -132,83 +70,6 @@ void MatrizDispersa::agregar(NodoObjeto* objeto){
 
 }
 
-//Nos crea una cabecera
-NodoCabecera* MatrizDispersa::crearHorizontal(int id){ //Le pasaremos el id (posicion) cabecera
-    if(this->horizontal==NULL){
-        NodoCabecera* nueva = new NodoCabecera(id);
-        this->horizontal=nueva;
-        return nueva;
-    }
-    //Si esta lleno
-    NodoCabecera *aux=this->horizontal;
-    //Si el id ingresado es menor
-    if(id <= aux->getId()){
-        NodoCabecera* nueva = new NodoCabecera(id);
-        nueva->setDerecha(aux);
-        this->horizontal->setIzquierda(nueva);
-        this->horizontal=nueva;
-        return nueva;
-    }
-    //Si el id ingresado es mayor
-    while(aux->getDerecha()!=NULL){
-        //Si el id esta entre dos nodos [Mayor a < idIngresado < Menor a]
-        if(id > aux->getId() && id < ((NodoCabecera*)aux)->getId()){
-            NodoCabecera* nueva = new NodoCabecera(id);
-            NodoCabecera* temp=(NodoCabecera*)aux->getDerecha(); //temp= derecha del actual
-            temp->setIzquierda(nueva); //izquierda de la derecha del actual es la nueva
-            nueva->setDerecha(temp); //derecha de la nueva es temp
-            aux->setDerecha(nueva);  //derecha del actual(aux) es la nueva
-            nueva->setIzquierda(aux); //izquierda de la nueva es la actual(aux)
-            return nueva;
-        }
-        aux = ((NodoCabecera*)aux->getDerecha());
-    }
-
-    //Si llego a null, es mayor a todos los id
-    NodoCabecera *nuevo = new NodoCabecera(id);
-    aux->setDerecha(nuevo); //derecha del actual es la nueva
-    nuevo->setIzquierda(aux); //izquierda de la nueva es el actual
-    return nuevo;
-}
-
-NodoCabecera* MatrizDispersa::crearVertical(int id){ //Ingresamos la posicion en Y que no existe
-    if(this->vertical==NULL){
-        NodoCabecera* nueva = new NodoCabecera(id);
-        this->vertical=nueva;
-        return nueva;
-    }
-    //Si esta lleno
-    NodoCabecera *aux=this->vertical;
-    //Si el id ingresado es menor
-    if(id <= aux->getId()){
-        NodoCabecera* nueva = new NodoCabecera(id);
-        nueva->setAbajo(aux);
-        this->vertical->setArriba(nueva);
-        this->vertical=nueva;
-        return nueva;
-    }
-    //Si el id ingresado es mayor
-    while(aux->getAbajo()!=NULL){
-        //Si el id esta entre dos nodos [Mayor a < idIngresado < Menor a]
-        if(id > aux->getId() && id < (((NodoCabecera*)aux->getAbajo()))->getId()){
-            NodoCabecera* nueva = new NodoCabecera(id);
-            NodoCabecera* temp=(NodoCabecera*)aux->getAbajo(); //temp= derecha del actual
-            temp->setArriba(nueva); //izquierda de la derecha del actual es la nueva
-            nueva->setAbajo(temp); //derecha de la nueva es temp
-            aux->setAbajo(nueva);  //derecha del actual(aux) es la nueva
-            nueva->setArriba(aux); //izquierda de la nueva es la actual(aux)
-            return nueva;
-        }
-       aux = ((NodoCabecera*)aux->getAbajo());
-    }
-
-    //Si llego a null, es mayor a todos los id
-    NodoCabecera *nuevo = new NodoCabecera(id);
-    aux->setAbajo(nuevo); //derecha del actual es la nueva
-    nuevo->setArriba(aux); //izquierda de la nueva es el actual
-    return nuevo;
-}
-
 //Obtener el ultimo nodo Horizontal. En donde se insertara el objeto (Posicion X)
 NodoMatriz* MatrizDispersa::obtenerUltimoH(NodoCabecera *cabecera, int id){ //Cabecera vertical y posicion X
     if (cabecera->getDerecha()==NULL){return cabecera;} //Si a la derecha no hay ningun nodo
@@ -253,6 +114,89 @@ NodoMatriz* MatrizDispersa::obtenerUltimoV(NodoCabecera *cabecera, int id){ //Ca
     return aux;
 }
 
+//** Metodo para CREAR una CABECERA SI esta NO EXISTE **
+
+//Nos crea una cabecera
+NodoCabecera* MatrizDispersa::crearHorizontal(int id){ //Le pasaremos el id (posicion) cabecera
+    if(this->horizontal==NULL){
+        NodoCabecera* nueva = new NodoCabecera(id);
+        this->horizontal=nueva;
+        return nueva;
+    }
+    //Si hay mas nodos
+    NodoCabecera *aux=this->horizontal;
+    //Si el id ingresado es menor
+    if(id <= aux->getId()){
+        NodoCabecera* nueva = new NodoCabecera(id);
+        nueva->setDerecha(aux);
+        this->horizontal->setIzquierda(nueva);
+        this->horizontal=nueva;
+        return nueva;
+    }
+    //Si el id ingresado es mayor
+    while(aux->getDerecha()!=NULL){
+        //Si el id esta entre dos nodos [Mayor a < idIngresado < Menor a]
+        if((id > aux->getId()) && (id < ((NodoCabecera*)aux->getDerecha())->getId())){
+            NodoCabecera* nueva = new NodoCabecera(id);
+            NodoCabecera* temp = ((NodoCabecera*)aux->getDerecha()); //temp= derecha del actual
+            temp->setIzquierda(nueva); //izquierda de la derecha del actual es la nueva
+            nueva->setDerecha(temp); //derecha de la nueva es temp
+            aux->setDerecha(nueva);  //derecha del actual(aux) es la nueva
+            nueva->setIzquierda(aux); //izquierda de la nueva es la actual(aux)
+            return nueva;
+        }
+        aux = ((NodoCabecera*)aux->getDerecha());
+    }
+
+    //Si llego a null, es mayor a todos los id
+    NodoCabecera *nuevo = new NodoCabecera(id);
+    aux->setDerecha(nuevo); //derecha del actual es la nueva
+    nuevo->setIzquierda(aux); //izquierda de la nueva es el actual
+    return nuevo;
+}
+
+NodoCabecera* MatrizDispersa::crearVertical(int id){ //Ingresamos la posicion en Y que no existe
+    //Si el this.vertical (inicio de verticales) aun esta NULL
+    if(this->vertical==NULL){
+        NodoCabecera* nueva = new NodoCabecera(id);
+        this->vertical=nueva;
+        return nueva;
+    }
+    //Si ya hay mas nodos
+    NodoCabecera *aux=this->vertical;
+    //Si el id ingresado es menor
+    if(id <= aux->getId()){
+        NodoCabecera* nueva = new NodoCabecera(id);
+        nueva->setAbajo(aux);
+        this->vertical->setArriba(nueva);
+        this->vertical=nueva;
+        return nueva;
+    }
+    //Si el id ingresado es mayor
+    while(aux->getAbajo()!=NULL){
+        //Si el id esta entre dos nodos [Mayor a < idIngresado < Menor a]
+        if((id > aux->getId()) && (id < ((NodoCabecera*)aux->getAbajo())->getId())){
+            NodoCabecera* nueva = new NodoCabecera(id);
+            NodoCabecera* temp = ((NodoCabecera*)aux->getAbajo()); //temp= derecha del actual
+            temp->setArriba(nueva); //izquierda de la derecha del actual es la nueva
+            nueva->setAbajo(temp); //derecha de la nueva es temp
+            aux->setAbajo(nueva);  //derecha del actual(aux) es la nueva
+            nueva->setArriba(aux); //izquierda de la nueva es la actual(aux)
+            return nueva;
+        }
+       aux = ((NodoCabecera*)aux->getAbajo());
+    }
+
+    //Si llego a null, es mayor a todos los id
+    NodoCabecera *nuevo = new NodoCabecera(id);
+    aux->setAbajo(nuevo); //derecha del actual es la nueva
+    nuevo->setArriba(aux); //izquierda de la nueva es el actual
+    return nuevo;
+}
+
+//************************************************************************************
+
+//**Metodos para RETORNAR NULL o CABECERA con la posicion x,y que se quiere insertar**
 
 NodoCabecera* MatrizDispersa::getVertical(int id){
     if(this->vertical==NULL){return NULL;}
@@ -278,170 +222,69 @@ NodoCabecera* MatrizDispersa::getHorizontal(int id){
     return aux;
 }
 
-void MatrizDispersa::generar(){
-   ostringstream cadena;
-   int contadorNodos = 0;
-   int contadorGrupos = 0;
-
-   cadena<<"digraph G {"<<endl<<"node[shape=\"box\"];"<<endl<<"graph[splines=\"ortho\"];"<<endl;
-
-   cadena<<"nodoo[label=\"Pivote\";group="<<contadorGrupos<<"];"<<endl;
-
-   //Cadena a graficar
-
-   NodoMatriz *auxVertical , *auxHorizontal;
-
-   //Primeras Cabeceras Vertical y Horizontal
-   auxVertical = this->vertical;
-   auxHorizontal = this->horizontal;
-
-   //**Recorro Verticalmente para los grupos, creacion cabeceras**
-
-   //Recorro Verticlamente las cabeceras
-   while(auxVertical!=NULL){
-       cadena<<"node"<<contadorNodos<<"[label=\""<<((NodoCabecera*)auxVertical)->getId()<<"\" , group="<<contadorGrupos<<"];"<<endl;
-       auxVertical = auxVertical->getAbajo();
-       contadorNodos++;
-   }
-
-   //Recorro Horizontalmente las cabeceras
-   while(auxHorizontal!=NULL){
-       cadena<<"node"<<contadorNodos<<"[label=\""<<((NodoCabecera*)auxHorizontal)->getId()<<"\" , groups="<<contadorGrupos<<"];"<<endl;
-       auxHorizontal = auxHorizontal->getDerecha();
-       contadorNodos++;
-       contadorGrupos++;
-   }
-
-   //**Uniones de Cabeceras Verticales y Horizontales entre ellas**
-   auxVertical = this->vertical;
-   auxHorizontal = this->horizontal;
-   int contadorUniones = 0;
-   int auxUniones = 0;
-   //Uniones cabeceras verticales
-   while(auxVertical!=NULL){
-       if(auxVertical->getAbajo()!=NULL){
-           auxUniones++;
-           cadena<<"node"<<contadorUniones<<"->node"<<auxUniones<<";"<<endl;
-           cadena<<"node"<<auxUniones<<"->node"<<contadorUniones<<";"<<endl;
-           contadorUniones++;
-       }
-       auxVertical = auxVertical->getAbajo();
-   }
-
-   //Uniones cabeceras horizontales
-   contadorUniones++; //numeracion del nodo actual
-   auxUniones++; //numeracion del nodo actual
-
-   int auxContadorHorizontal = auxUniones; //Para posteriormente las uniones de Objetos
-
-   while(auxHorizontal!=NULL){
-       if(auxHorizontal->getDerecha()!=NULL){
-           auxUniones++;
-           cadena<<"node"<<contadorUniones<<"->node"<<auxUniones<<";"<<endl;
-           cadena<<"node"<<auxUniones<<"->node"<<contadorUniones<<";"<<endl;
-           contadorUniones++;
-       }
-       auxHorizontal = auxHorizontal->getDerecha();
-   }
-
-   //**Recorro primero horizontal y luego vertical para crear grupos de "Nodos Objetos"**
-   auxVertical = this->vertical;
-   auxHorizontal = this->horizontal;
-   contadorNodos++;
-   contadorGrupos = 1;
-
-   while(auxHorizontal!=NULL){
-       if(auxHorizontal->getAbajo()!=NULL){
-           NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
-           while(auxObjeto!=NULL){
-               string letra = ((NodoObjeto*)auxObjeto)->getLetra();
-               int x = ((NodoObjeto*)auxObjeto)->getPosicionX();
-               int y = ((NodoObjeto*)auxObjeto)->getPosicionY();
-               cadena<<"node"<<contadorNodos<<"[label=\""<<letra<<" , Pos. ("<<x<<" , "<<y<<")\", group="<<contadorGrupos<<"];"<<endl;
-
-               contadorNodos++;
-               auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
-           }
-       }
-       contadorGrupos++;
-       auxHorizontal = auxHorizontal->getDerecha();
-   }
+//*****************************************************************************************
 
 
-   //**Recorro Primero Horizontal y luego Verticalmente para unir "Nodos Objeto" VERTICALMENTE**
-   auxHorizontal = this->horizontal;
-   while(auxHorizontal!=NULL){
-       if(auxHorizontal->getAbajo()!=NULL){
-           contadorUniones++; //numeracion del nodo actual
-           auxUniones++; //numeracion del nodo actual
-           NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
+void MatrizDispersa::mostrar_Posiciones(){
+    NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
+    aux = this->vertical;
+    temp = this->horizontal;
 
-           //Hacemos uso del contador auxiliar horizontal
-           cadena<<"node"<<auxContadorHorizontal<<"->node"<<auxUniones<<";"<<endl;
-           cadena<<"node"<<auxUniones<<"->node"<<auxContadorHorizontal<<";"<<endl;
+    //aux y temp son cabezas V y H
+    while(aux!=NULL){
+        extra=aux->getAbajo(); //Extra es un NodoCabecera
+        cout<<((NodoCabecera*)aux)->getId()<<" - ";
+        aux2=aux->getDerecha(); //aux2 es un NodoObjeto
 
-           while(auxObjeto->getAbajo()!=NULL){
-               auxUniones++;
-               cadena<<"node"<<contadorUniones<<"->node"<<auxUniones<<";"<<endl;
-               cadena<<"node"<<auxUniones<<"->node"<<contadorUniones<<";"<<endl;
-               contadorUniones++;
-               auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
-           }
+        while(aux2!=NULL){
+            extra2 = aux2->getDerecha(); //Extra 2 es NodoObjeto
+            cout<<((NodoObjeto*)aux2)->getIdObjeto()<<" ("<<((NodoObjeto*)aux2)->getPosicionX()<<" , "<<((NodoObjeto*)aux2)->getPosicionY()<<" ) ";
+            aux2=extra2; //NodosObjetos
+        }
+        cout<<"\n";
+        aux = extra; //aux es Cabecera
+    }
 
-           auxContadorHorizontal++;
-       }
-       auxHorizontal = auxHorizontal->getDerecha();
-   }
-
-
-   //**Recorro Primero Vertical y luego Horizontalmente para unir "Nodos Objeto" HORIZONTALMENTE**
-//   auxVertical = this->vertical;
-//   auxHorizontal = this->horizontal;
-//   int cabecerasHorizontales = 0;
-//   int cabecerasVerticales = 0;
-//   int sumaCabeceras = 0;
-
-//   while(auxHorizontal!=NULL){
-//       cabecerasHorizontales++;
-//       auxHorizontal = auxHorizontal->getDerecha();
-//   }
-
-//   while(auxVertical!=NULL){
-//       cabecerasVerticales++;
-//       auxVertical = auxVertical->getAbajo();
-//   }
-
-//   //Primer nodo despues de todas las cabeceras
-//   sumaCabeceras = cabecerasHorizontales + cabecerasVerticales;
-//   int cabeceras = sumaCabeceras;
-//   auxVertical = this->vertical;
-//   auxHorizontal = this->horizontal;
-
-//   while(auxVertical!=NULL){
-//       while(((NodoObjeto*)auxVertical->getDerecha() != ((NodoObjeto*)auxHorizontal)->getAbajo())){
-//           NodoObjeto* auxObjeto = ((NodoObjeto*)auxHorizontal->getAbajo());
-//           while(auxObjeto!=NULL){
-//               cabeceras++;
-//               auxObjeto = ((NodoObjeto*)auxObjeto->getAbajo());
-//           }
-
-//           auxHorizontal = auxHorizontal->getDerecha();
-//       }
-
-
-//   }
-
-
-   //Termina Cadena a graficar
-   cadena<<"}"<<endl;
-   ofstream file("salida.dot");
-   file<<cadena.str();
-   file.close();
-
-   system("circo -Tpng salida.dot -o imagen.png");
-   cout<<cadena.str()<<endl;
+    while(temp!=NULL){ //Temp es cabecera
+        temp2=temp->getDerecha(); //Temp es cabecera H
+        cout<<((NodoCabecera*)temp)->getId()<<" ";
+        temp = temp2;
+    }
 }
 
+void MatrizDispersa::mostrar_Punteros(){
+    NodoMatriz *aux,*aux2,*temp,*temp2,*extra,*extra2;
+    aux = this->vertical;  //aux=inicio vertical
+    temp = this->horizontal; //temp = inicio horizontal
+
+    while(aux!=NULL){ //Recorremos las cabeceras verticalmente
+        cout<<"\n\n";
+        extra=aux->getAbajo(); //Obtener abajo de cabeza vertical
+        aux2=aux->getDerecha(); //Obtener derecha de cabeza vertical
+
+        cout<<"\nSe recorre verticalmente: "<<((NodoCabecera*)aux)->getId();
+
+        while(aux2!=NULL){//mientras la derecha no sea null
+            extra2=aux2->getDerecha(); //extra2 es la derecha de la derecha
+            cout<<"\nNodo Objeto Recorrido: "<<((NodoObjeto*)aux2)->getIdObjeto();
+            cout<<"\nArriba: "<<((NodoCabecera*)aux2->getArriba())->getId();
+            cout<<"\nIzquierda: "<<((NodoCabecera*)aux2->getIzquierda())->getId();
+            //delete aux2; //eliminamos la primera derecha
+            aux2=extra2; //primera derecha esta donde la segunda derecha
+        }
+        //delete aux; //eliminamos la cabecera vertical
+        aux=extra; //aux ahora es el de abajo
+    }
+
+
+    while(temp!=NULL){ //mientras la cabecera horizontal no sea null
+        cout<<"\n\n";
+        temp2=temp->getDerecha(); //temp2 es la derecha del actual horizontal
+        cout<<"\nSe recorre horizontalmente: "<<((NodoCabecera*)temp)->getId();
+        //delete temp;  //eliminamos el actual horizontal
+        temp=temp2;   //temp se mueve hacia la derecha del eliminado.
+    }
+}
 
 void MatrizDispersa::generar2(){
    ostringstream cadena;
@@ -550,8 +393,8 @@ void MatrizDispersa::generar2(){
        cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxVertical)<<";"<<endl;
 
        while(auxObjeto->getDerecha()!=NULL){
-           cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxObjeto->getAbajo())<<";"<<endl;
-           cadena<<"node"<<&(*auxObjeto->getAbajo())<<"->node"<<&(*auxObjeto)<<";"<<endl;
+           cadena<<"node"<<&(*auxObjeto)<<"->node"<<&(*auxObjeto->getDerecha())<<";"<<endl;
+           cadena<<"node"<<&(*auxObjeto->getDerecha())<<"->node"<<&(*auxObjeto)<<";"<<endl;
            auxObjeto = ((NodoObjeto*)auxObjeto->getDerecha());
        }
        auxVertical = auxVertical->getAbajo();

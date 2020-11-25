@@ -56,20 +56,39 @@ int main()
 //******************* PRUEBA DISPERSA *******************
     MatrizDispersa* m = new MatrizDispersa();
     Libreria* l1 = new Libreria(1, "E1", "S", "C");
+    Libreria* l2 = new Libreria(2, "E2", "R", "T");
     Objeto* o1 = new Objeto(13, l1);
-    Objeto* o2 = new Objeto(25, l1);
+    Objeto* o2 = new Objeto(25, l2);
     Objeto* o3 = new Objeto(75, l1);
     Objeto* o4 = new Objeto(100, l1);
+    Objeto* o5 = new Objeto(125, l1);
+    Objeto* o6 = new Objeto(150, l1);
+    Objeto* o7 = new Objeto(175, l1);
+    Objeto* o8 = new Objeto(200, l1);
+    Objeto* o9 = new Objeto(225, l1);
+    Objeto* o10 = new Objeto(250, l1);
 
-    NodoObjeto* nodoM1 = new NodoObjeto(o1->getId(), o1->getLibreria()->getColor(), o1->getLibreria()->getLetra(), 1, 4);
-    NodoObjeto* nodoM2 = new NodoObjeto(o2->getId(), o2->getLibreria()->getColor(), o2->getLibreria()->getLetra(), 3, 3);
-    NodoObjeto* nodoM3 = new NodoObjeto(o3->getId(), o3->getLibreria()->getColor(), o3->getLibreria()->getLetra(), 10, 11);
-    NodoObjeto* nodoM4 = new NodoObjeto(o4->getId(), o4->getLibreria()->getColor(), o4->getLibreria()->getLetra(), 2, 51);
+    //HAY ERROR EN HORIZONTALES, insertando entre un valor mayor y menor
+    NodoObjeto* nodoM1 = new NodoObjeto(o1->getId(), o1->getLibreria()->getColor(), o1->getLibreria()->getLetra(), 100, 20);
+    NodoObjeto* nodoM2 = new NodoObjeto(o2->getId(), o2->getLibreria()->getColor(), o2->getLibreria()->getLetra(), 100, 20);
+    NodoObjeto* nodoM3 = new NodoObjeto(o3->getId(), o3->getLibreria()->getColor(), o3->getLibreria()->getLetra(), 120, 10);
+    NodoObjeto* nodoM4 = new NodoObjeto(o4->getId(), o4->getLibreria()->getColor(), o4->getLibreria()->getLetra(), 90, 15);
+    NodoObjeto* nodoM5 = new NodoObjeto(o5->getId(), o5->getLibreria()->getColor(), o5->getLibreria()->getLetra(), 95, 40);
+    NodoObjeto* nodoM6 = new NodoObjeto(o6->getId(), o6->getLibreria()->getColor(), o6->getLibreria()->getLetra(), 2, 45);
+    NodoObjeto* nodoM7 = new NodoObjeto(o7->getId(), o7->getLibreria()->getColor(), o7->getLibreria()->getLetra(), 1, 50);
+    NodoObjeto* nodoM8 = new NodoObjeto(o8->getId(), o8->getLibreria()->getColor(), o8->getLibreria()->getLetra(), 170, 1);
+    NodoObjeto* nodoM9 = new NodoObjeto(o9->getId(), o9->getLibreria()->getColor(), o9->getLibreria()->getLetra(), 180, 60);
+    NodoObjeto* nodoM10 = new NodoObjeto(o10->getId(),o10->getLibreria()->getColor(), o10->getLibreria()->getLetra(), 190, 65);
     m->agregar(nodoM1);
     m->agregar(nodoM2);
-    cout<<"gg\n";
     m->agregar(nodoM3);
     m->agregar(nodoM4);
+    m->agregar(nodoM5);
+    m->agregar(nodoM6);
+    m->agregar(nodoM7);
+    m->agregar(nodoM8);
+    m->agregar(nodoM9);
+    m->agregar(nodoM10);
     cout<<"\n\n";
     m->mostrar_Posiciones();
     cout<<"\n\nMostrando Punteros: \n";
